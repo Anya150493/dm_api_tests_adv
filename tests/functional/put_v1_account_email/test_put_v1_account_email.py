@@ -10,7 +10,7 @@ def test_put_v1_account_email():
     login_api = LoginApi(host='http://5.63.153.31:5051')
     mailhog_api = MailhogApi(host='http://5.63.153.31:5025')
     # Регистрация пользователя
-    login = 'medvedeva_test32'
+    login = 'medvedeva_test45'
     password = '123456789'
     email = f'{login}@mail.ru'
     json_data = {
@@ -56,11 +56,11 @@ def test_put_v1_account_email():
     assert response.status_code == 200, "Пользователь не смог авторизоваться"
 
     # Изменить email
-    changed_email = 'medvedeva_test55@mail.ru'
+    email = 'medvedeva_test65@mail.ru'
     json_data = {
         'login': login,
         'password': password,
-        'email': changed_email,
+        'email': email,
     }
     response = account_api.put_v1_account_email(json_data=json_data)
     print(response.status_code)
@@ -87,9 +87,9 @@ def test_put_v1_account_email():
     assert response.status_code == 200, "Письма не были получены"
 
     # Получение токена для подтверждения email
-    token_new = get_activation_token_by_login(login, response)
-    print(f'token_new:{token_new}')
-    assert token_new is not None, f"Токен для пользователя {login}, не был получен"
+    token = get_activation_token_by_login_changed(login, response, email)
+    print(f'token_new:{token}')
+    assert token is not None, f"Токен для пользователя {login}, не был получен"
 
     # Активация токена подтверждения
     response = account_api.put_v1_account_token(token=token)
@@ -124,15 +124,19 @@ def get_activation_token_by_login(
     return token
 
 
-# def get_activation_token_by_login_changed(
-#         login,
-#         response
-# ):
-#     token_new = None
-#     for item in response.json()['items']:
-#         user_data = loads(item['Content']['Body'])
-#         user_login = user_data['Login']
-#
-#         if user_login == login:
-#             token_new = user_data['ConfirmationLinkUrl'].split('/')[-1]
-#     return token_new
+def get_activation_token_by_login_changed(
+        login,
+        response,
+        email
+):
+    token = None
+    for item in response.json()['items']:
+        user_data = loads(item['Content']['Body'])
+        user_login = user_data['Login']
+        user_new_email = item['Content']['Headers']['To'][0]
+
+        if user_login == login:
+            if user_new_email == email:
+                token = user_data['ConfirmationLinkUrl'].split('/')[-1]
+
+    return token

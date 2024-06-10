@@ -41,6 +41,19 @@ def test_put_v1_account_token():
     print(response.text)
     assert response.status_code == 200, "Пользователь не был активирован"
 
+    # Авторизоваться
+
+    json_data = {
+        'login': login,
+        'password': password,
+        'rememberMe': True,
+    }
+
+    response = login_api.post_v1_account_login(json_data=json_data)
+    print(response.status_code)
+    print(response.text)
+    assert response.status_code == 200, "Пользователь не смог авторизоваться"
+
 
 def get_activation_token_by_login(
         login,
