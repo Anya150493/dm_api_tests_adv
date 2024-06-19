@@ -102,7 +102,7 @@ class AccountHelper:
             email: str,
             password: str
     ):
-        email = 'medvedeva_test128@mail.ru'
+        email = 'medvedeva_test144@mail.ru'
 
         json_data = {
             'login': login,
@@ -111,7 +111,7 @@ class AccountHelper:
         }
         response = self.dm_account_api.account_api.put_v1_account_email(json_data=json_data)
         assert response.status_code == 200, "Адрес электронной почты не изменен"
-        token = self.get_activation_token_by_login(login=login, response=response)
+        token = self.get_activation_token_by_login(login=login)
         assert token is not None, f"Токен для пользователя {login}, не был получен"
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
         assert response.status_code == 200, "Пользователь не был активирован"
