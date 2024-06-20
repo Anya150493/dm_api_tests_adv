@@ -6,14 +6,6 @@ from restclient.configuration import Configuration
 
 class AccountApi(RestClient):
 
-    def __init__(
-            self,
-            configuration: Configuration
-    ):
-        super().__init__(configuration)
-        self.login_api = None
-        self.account_api = None
-
     def post_v1_account(
             self,
             json_data
@@ -61,5 +53,3 @@ class AccountApi(RestClient):
             json=json_data
         )
         return response
-
-
