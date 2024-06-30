@@ -7,5 +7,6 @@ def test_put_v1_account_email(
     email = prepare_user.email
 
     account_helper.register_new_user(login=login, password=password, email=email)
-    account_helper.change_email(login=login, password=password, email=email)
+    response=account_helper.change_email(login=login, password=password, email=email)
+    print(response.resource.login)
     account_helper.user_login(login=login, password=password)
