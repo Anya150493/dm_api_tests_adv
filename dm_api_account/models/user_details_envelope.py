@@ -51,7 +51,7 @@ class PagingSettings(BaseModel):
 
 
 class UserSettings(BaseModel):
-    color_schema: ColorSchema
+    color_schema: Optional[ColorSchema] = Field(None, alias='colorSchema')
     nanny_greetings_message: str = Field(None, alias='nannyGreetingsMessage')
     paging: PagingSettings
 
@@ -69,8 +69,8 @@ class UserDetails(BaseModel):
     registration: str = Field(None, alias='registration')
     icq: str = Field(None, alias='icq')
     skype: str = Field(None, alias='skype')
-    original_picture_url: str = Field(..., alias='originalPictureUrl')
-    info: InfoBbText
+    original_picture_url: str = Field(None, alias='originalPictureUrl')
+    info: InfoBbText | str = Field(None)
     settings: UserSettings
 
 
