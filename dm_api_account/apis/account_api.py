@@ -67,7 +67,7 @@ class AccountApi(RestClient):
 
     def get_v1_account(
             self,
-            validate_response=False,
+            validate_response=True,
             **kwargs
     ):
         """
