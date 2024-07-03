@@ -1,5 +1,15 @@
 from datetime import datetime
 
+from hamcrest import (
+    all_of,
+    has_property,
+    instance_of,
+    starts_with,
+    has_properties,
+    equal_to,
+)
+
+from checkers.get_v1_aacount import GetV1Account
 from checkers.http_checkers import check_status_code_http
 from assertpy import assert_that, soft_assertions
 
@@ -10,10 +20,8 @@ def test_get_v1_account_auth(
         auth_account_helper
 ):
     response = auth_account_helper.dm_account_api.account_api.get_v1_account()
-    with soft_assertions():
-        assert_that(response.resource.login).is_equal_to("medvedeva_26_06_2024_15_48_59")
-        assert_that(response.resource.online).is_instance_of(datetime)
-        assert_that(response.resource.roles).contains(UserRole.GUEST, UserRole.PLAYER)
+    GetV1Account.get_check_response_values(response)
+
 
 
 
