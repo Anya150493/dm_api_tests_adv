@@ -1,6 +1,8 @@
 import time
 from json import loads
 
+import allure
+
 from dm_api_account.models.change_email import ChangeEmail
 from dm_api_account.models.change_password import ChangePassword
 from dm_api_account.models.login_credentials import LoginCredentials
@@ -64,6 +66,7 @@ class AccountHelper:
         self.dm_account_api.account_api.set_headers(token)
         self.dm_account_api.login_api.set_headers(token)
 
+    @allure.step("Регистрация нового пользователя")
     def register_new_user(
             self,
             login: str,
@@ -86,6 +89,7 @@ class AccountHelper:
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
         return response
 
+    @allure.step("Аутентификация пользователя")
     def user_login(
             self,
             login: str,
@@ -124,6 +128,7 @@ class AccountHelper:
                 token = user_data['ConfirmationLinkUrl'].split('/')[-1]
         return token
 
+    @allure.step("Смена email")
     def change_email(
             self,
             login: str,
@@ -144,6 +149,7 @@ class AccountHelper:
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
         return response
 
+    @allure.step("Разлогин текущим пользователем")
     def logout_user(
             self,
             **kwargs
@@ -151,6 +157,7 @@ class AccountHelper:
         response = self.dm_account_api.login_api.delete_v1_account_login(**kwargs)
         assert response.status_code == 204, f"Текущий пользователь не был разлогинен"
 
+    @allure.step("Разлогин текущим пользователем на всех устройствах")
     def logout_user_all(
             self,
             **kwargs
@@ -158,6 +165,7 @@ class AccountHelper:
         response = self.dm_account_api.login_api.delete_v1_account_login_all(**kwargs)
         assert response.status_code == 204, f"Текущий пользователь не был разлогинен со всех устройств"
 
+    @allure.step("Смена пароля")
     def change_password(
             self,
             login: str,
@@ -179,18 +187,19 @@ class AccountHelper:
             # },
         )
         token = self.get_token(login=login, token_type="reset")
-        change_password=ChangePassword(
+        change_password = ChangePassword(
             login=login,
             token=token,
             old_password=old_password,
             new_password=new_password
         )
-        response=self.dm_account_api.account_api.put_v1_account_password(
+        response = self.dm_account_api.account_api.put_v1_account_password(
             change_password=change_password,
             validate_response=validate_response
         )
         return response
 
+    @allure.step("Получение токена активации или сброса пароля")
     @retry(
         stop_max_attempt_number=5, retry_on_result=retry_if_result_none, wait_fixed=1000
     )
