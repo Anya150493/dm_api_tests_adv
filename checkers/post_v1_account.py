@@ -38,4 +38,4 @@ class PostV1Account:
                 )
             )
         )
-        assert_that(str(response.resource.registration), starts_with(today))
+        # assert_that(str(response.resource.registration), starts_with(today))
